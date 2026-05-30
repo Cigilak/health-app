@@ -25,3 +25,4 @@ Original Medicare Part B beneficiaries available from the CMS Chronic Conditions
 ![Insights](images/HierarchyTX&CA.png)
 
 ### Architecture, systems design, and analytics
+![Architecture_Design](images/HighLevelArchitecture&Design.png)
