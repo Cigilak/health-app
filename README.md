@@ -1,4 +1,4 @@
-#											Health Application
+#											Healthcare Application
 
 ## Insights Summary
 1. Significant variation exists in procedure utilization and medicare payments processed across states and providers, 
@@ -25,4 +25,4 @@ Original Medicare Part B beneficiaries available from the CMS Chronic Conditions
 ![Insights](images/HierarchyTX&CA.png)
 
 ### Architecture, systems design, and analytics
-![Architecture_Design](images/HighLevelArchitecture&Design.png)
+![Architecture_Design](images/Architecture_diagram.png)
