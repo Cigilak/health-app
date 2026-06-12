@@ -6,7 +6,7 @@ with volume differences of up to 30% observed between states and Ruca Codes for 
 These insights enable healthcare executives to identify unwarranted variation, benchmark provider performance, 
 optimize resource allocation, and inform strategic decisions related to network management and care delivery.
 2. Cardiology, Internal Medicine, and Ophthalmology consistently bring high payment overall in most states.
-Interestinly, certain states like Florida, Nevada, Texas show different behavior like high payments in dermatology,
+Interestingly, certain states like Florida, Nevada, Texas show different behavior like high payments in dermatology,
 diagnostic radiology, and ambuloatory surgical center. Better care can be provided on differences in patient behavior 
 and needs in such states. (Take a look at the heatmap for more details)
 
