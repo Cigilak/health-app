@@ -122,3 +122,19 @@ def get_high_provider_cost():
     """
 
     return con.execute(query).df()
+
+### State and Provider Type comparison to see how we can provider better care based on payments and patient behav.
+def get_state_specialty_payments():
+    query = f"""
+    SELECT
+        Rndrng_Prvdr_State_Abrvtn AS state,
+        Rndrng_Prvdr_Type,
+        SUM(Avg_Mdcr_Pymt_Amt * Tot_Benes) AS total_payments
+    FROM read_parquet('{PARQUET_FILE}')
+    WHERE Rndrng_Prvdr_State_Abrvtn IS NOT NULL
+    GROUP BY Rndrng_Prvdr_State_Abrvtn, Rndrng_Prvdr_Type
+    ORDER BY Rndrng_Prvdr_State_Abrvtn DESC, total_payments DESC 
+    LIMIT 100
+    """
+
+    return duckdb.execute(query).df()

@@ -5,7 +5,8 @@ from analytics import (
     get_provider_spend,
     get_state_cost,
     get_high_risk,
-    get_high_provider_cost
+    get_high_provider_cost,
+    get_state_specialty_payments
 )
 
 
@@ -17,36 +18,36 @@ from styles import (
 
 import plotly.express as px
 
-# -----------------------------------
+
 # Page Config
-# -----------------------------------
+
 st.set_page_config(
     page_title="Healthcare Analytics",
     layout="wide"
 )
 
-# -----------------------------------
+
 # Load Executive Styling
-# -----------------------------------
+
 load_css()
 
-# -----------------------------------
+
 # Executive Navbar
-# -----------------------------------
+
 st.markdown("""
 <div class="navbar">
  <center> Provider Network Leakage Intelligence </center>
 </div>
 """, unsafe_allow_html=True)
 
-# -----------------------------------
+
 # Load Dataset
-# -----------------------------------
+
 df = load_data()
 
-# -----------------------------------
+
 # TOP FILTER BAR
-# -----------------------------------
+
 st.markdown("""
 <div class="filter-header">
 Executive Filters
@@ -55,9 +56,9 @@ Executive Filters
 
 f1, f2, f3 = st.columns([2,2,1])
 
-# -----------------------------------
+
 # State Filter
-# -----------------------------------
+
 states = sorted(
     df["state"]
     .dropna()
@@ -71,9 +72,9 @@ with f1:
         ["All"] + states
     )
 
-# -----------------------------------
+
 # Provider Filter
-# -----------------------------------
+
 providers = sorted(
     df["provider_type"]
     .dropna()
@@ -87,9 +88,9 @@ with f2:
         ["All"] + providers
     )
 
-# -----------------------------------
+
 # Refresh Button
-# -----------------------------------
+
 with f3:
 
     st.markdown("<br>", unsafe_allow_html=True)
@@ -98,9 +99,9 @@ with f3:
         "Refresh Dashboard"
     )
 
-# -----------------------------------
+
 # Apply Filters
-# -----------------------------------
+
 filtered_df = df.copy()
 
 if selected_state != "All":
@@ -117,9 +118,9 @@ if selected_provider != "All":
         selected_provider
     ]
 
-# -----------------------------------
+
 # KPI Section
-# -----------------------------------
+
 kpis = get_kpis(filtered_df)
 
 st.markdown("""
@@ -162,9 +163,9 @@ for col, metric in zip(
         </div>
         """, unsafe_allow_html=True)
 
-# -----------------------------------
+
 # State Cost and Avg Service Comparison Analysis
-# -----------------------------------
+
 
 top_df = (
     filtered_df[
@@ -256,9 +257,9 @@ with tab2:
         use_container_width=True
     )
 
-# -----------------------------------
+
 # Provider Spend Analytics
-# -----------------------------------
+
 st.markdown("""
 <div class="section-title">
 Provider Cost Analytics
@@ -299,9 +300,9 @@ st.plotly_chart(
     use_container_width=True
 )
 
-# -----------------------------------
+
 # State Cost Analysis
-# -----------------------------------
+
 st.markdown("""
 <div class="section-title">
 Regional Cost Distribution
@@ -337,9 +338,9 @@ st.plotly_chart(
     use_container_width=True
 )
 
-# -----------------------------------
+
 # High Risk Providers
-# -----------------------------------
+
 st.markdown("""
 <div class="section-title">
 Potential High Leakage Providers
@@ -356,10 +357,56 @@ st.dataframe(
     height=400
 )
 
+# State-Level and Provider Type Payments and Behav.
 
-# -----------------------------------
+
+st.title("Medicare Payment: State and Provider Types")
+
+heatmap_df = get_state_specialty_payments()
+if selected_state != "All":
+
+    heatmap_df = heatmap_df[
+        heatmap_df["state"] ==
+        selected_state
+    ]
+
+if selected_provider != "All":
+
+    heatmap_df = heatmap_df[
+        heatmap_df["Rndrng_Prvdr_Type"] ==
+        selected_provider
+    ]
+
+
+pivot_df = heatmap_df.pivot_table(
+    index="state",
+    columns="Rndrng_Prvdr_Type",
+    values="total_payments",
+    aggfunc="sum",
+    fill_value=0
+)
+
+fig = px.imshow(
+    pivot_df,
+    labels=dict(
+        x="Provider Type",
+        y="State",
+        color="Total Medicare Payments"
+    ),
+    color_continuous_scale="Reds",
+    aspect="auto",
+    title="State-Level and Provider Type Medicare Payment Heatmap"
+)
+
+fig.update_layout(
+    height=900,
+    margin=dict(l=20, r=20, t=60, b=20)
+)
+
+st.plotly_chart(fig, use_container_width=True)
+
 # Footer
-# -----------------------------------
+
 st.markdown("""
 <hr>
 
